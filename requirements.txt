@@ -1,0 +1,5 @@
+Flask
+flask-cors  # Optional: For handling CORS
+python-dotenv  # Optional: For managing environment variables
+instaloader  # If you're using Instaloader
+pymongo[srv]  # To install MongoDB driver with SRV support
