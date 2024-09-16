@@ -1,58 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { LogOut, RefreshCw } from "lucide-react";
+import { LogOut, RefreshCw, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-// Mock data for demonstration
-const mockVideos = [
-  {
-    id: 1,
-    title: "Fun video 1",
-    thumbnail: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 2,
-    title: "Exciting video 2",
-    thumbnail: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 3,
-    title: "Interesting video 3",
-    thumbnail: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 4,
-    title: "Amazing video 4",
-    thumbnail: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 5,
-    title: "Cool video 5",
-    thumbnail: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 6,
-    title: "Awesome video 6",
-    thumbnail: "/placeholder.svg?height=100&width=100",
-  },
-];
+interface Video {
+  _id: { $oid: string };
+  username: string;
+  post_id: number;
+  shortcode: string;
+  caption: string;
+  post_url: string;
+  post_owner: string;
+}
+
+const truncateCaption = (caption: string, wordLimit: number = 15): string => {
+  const words = caption.split(" ");
+  if (words.length <= wordLimit) return caption;
+  return words.slice(0, wordLimit).join(" ") + "..."; // Add ellipsis if truncated
+};
 
 export function GalleryPageComponent() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [videos, setVideos] = useState(mockVideos);
-  const [filteredVideos, setFilteredVideos] = useState(mockVideos);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [filteredVideos, setFilteredVideos] = useState<Video[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleSearch = () => {
-    const filtered = videos.filter((video) =>
-      video.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredVideos(filtered);
-  };
+  const handleSearch = () => {};
+
+  useEffect(() => {
+    fetch("/api/posts/saved_posts")
+      .then((res) => res.json()) // Parsing the JSON from the response
+      .then((data) => {
+        const dataObject = JSON.parse(data);
+        setVideos(dataObject);
+        setFilteredVideos(dataObject);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching saved posts:", error); // Handle errors
+      });
+  }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -61,11 +53,34 @@ export function GalleryPageComponent() {
   };
 
   const handleRefresh = () => {
-    // In a real application, you would fetch new data here
-    // For this example, we'll just randomize the order of the videos
-    const shuffled = [...videos].sort(() => Math.random() - 0.5);
-    setVideos(shuffled);
-    setFilteredVideos(shuffled);
+    fetch("/api/posts/update_posts", { method: "PUT" })
+      .then((res) => {
+        setLoading(true);
+        if (!res.ok) {
+          throw new Error("Failed to update posts");
+        }
+        return res.json(); // Parse the JSON from the response
+      })
+      .then(() => {
+        // After updating posts, fetch the saved posts
+        return fetch("/api/posts/saved_posts");
+      })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch saved posts");
+        }
+        return res.json(); // Parse the JSON from the response
+      })
+      .then((data) => {
+        const dataObject = JSON.parse(data);
+        setVideos(dataObject);
+        setFilteredVideos(dataObject);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching saved posts:", error); // Handle errors
+        setLoading(false);
+      });
   };
 
   const handleLogout = () => {
@@ -112,22 +127,32 @@ export function GalleryPageComponent() {
           </div>
         </div>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
-          {filteredVideos.map((video) => (
-            <Link href={`/post/${video.id}`} key={video.id} className="block">
-              <div className="aspect-square relative group">
-                <img
-                  src={video.thumbnail}
-                  alt={video.title}
-                  className="w-full h-full object-cover rounded-lg shadow-md transition-transform duration-200 ease-in-out group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-200 rounded-lg flex items-center justify-center">
-                  <p className="text-white text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center p-2">
-                    {video.title}
-                  </p>
+          {loading ? (
+            <p>Loading...</p>
+          ) : Array.isArray(filteredVideos) && filteredVideos.length > 0 ? (
+            filteredVideos.map((video) => (
+              <Link
+                href={`/post/${video.post_id.toString()}`}
+                key={video.post_id}
+                className="block"
+              >
+                <div className="aspect-square relative group">
+                  <img
+                    src={video.post_url}
+                    alt={video.post_owner}
+                    className="w-full h-full object-cover rounded-lg shadow-md transition-transform duration-200 ease-in-out group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-200 rounded-lg flex items-center justify-center">
+                    <p className="text-white text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center p-2">
+                      {truncateCaption(video.caption)}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))
+          ) : (
+            <p>No posts available. Please refresh.</p>
+          )}
         </div>
       </div>
     </div>

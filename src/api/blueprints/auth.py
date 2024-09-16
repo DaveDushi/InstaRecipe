@@ -13,7 +13,7 @@ def login():
 
     user = InstagramManager(username, password)
     try:
-        # user.login()
+        user.login()
         flask_session['username'] = username
         return jsonify({"message": "Login successful"}), 200
     except Exception as e:

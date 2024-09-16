@@ -42,3 +42,15 @@ def update_saved_posts():
         return jsonify({"message": "Posts updated successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+
+@posts_bp.route('/post/<int:id>', methods=['GET'])
+def find_post(id):
+    # Your logic to find the post by id
+    post = recipe_collection.find_one({'post_id': id}, {'caption_embedding': 0})
+
+    if post:
+        post_json = dumps(post)
+        return jsonify(post_json), 200
+    else:
+        return jsonify({"error": "Post not found"}), 404

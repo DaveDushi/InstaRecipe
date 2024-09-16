@@ -1,21 +1,64 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import { ChevronLeft, Send, ExternalLink } from "lucide-react";
 
-export function VideoPageComponent({ id = "1" }) {
-  // Mock data for demonstration
-  const video = {
-    id,
-    username: "user123",
-    title: "Amazing Video",
-    url: "https://example.com/video.mp4",
-    caption:
-      "This is an amazing video showcasing something really cool! #awesome #video",
-    postLink: "https://example.com/post/1",
-  };
+// Define the shape of the video data
+interface Video {
+  id: string;
+  username: string;
+  post_id: number;
+  shortcode: string;
+  caption: string;
+  post_url: string;
+  post_owner: string;
+}
+
+interface VideoPageProps {
+  id: string;
+}
+
+export function VideoPageComponent({ id }: VideoPageProps) {
+  const [video, setVideo] = useState<Video | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchVideo = async () => {
+      try {
+        const response = await fetch(`/api/posts/post/${id}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch video with id ${id}`);
+        }
+        const data = await response.json();
+        const dataObject = JSON.parse(data);
+        setVideo(dataObject);
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching video:", err);
+        setError("Failed to load video.");
+        setLoading(false);
+      }
+    };
+    if (id) {
+      fetchVideo();
+    }
+  }, [id]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
+  if (!video) {
+    return <p>No video found.</p>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -27,7 +70,7 @@ export function VideoPageComponent({ id = "1" }) {
               className="absolute inset-0 w-full h-full object-contain"
               poster="/placeholder.svg?height=640&width=360"
             >
-              <source src={video.url} type="video/mp4" />
+              <source src={video.post_url} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -44,7 +87,7 @@ export function VideoPageComponent({ id = "1" }) {
                   <Send className="h-6 w-6" />
                 </Button>
                 <Link
-                  href={video.postLink}
+                  href={`instagram.com/${video.shortcode}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -60,7 +103,9 @@ export function VideoPageComponent({ id = "1" }) {
             </div>
             <div>
               <p className="font-bold mb-2">{video.username}</p>
-              <p>{video.caption}</p>
+              <p>
+                <pre>{video.caption}</pre>
+              </p>
             </div>
           </div>
         </CardContent>

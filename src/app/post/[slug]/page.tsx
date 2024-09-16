@@ -4,8 +4,7 @@ import React from "react";
 export default function Post({ params }: { params: { slug: string } }) {
   return (
     <>
-      <VideoPageComponent />
-      <p>My Post: {params.slug}</p>
+      <VideoPageComponent id={params.slug} />
     </>
   );
 }
