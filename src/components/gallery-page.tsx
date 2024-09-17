@@ -27,7 +27,6 @@ const truncateCaption = (caption: string, wordLimit: number = 15): string => {
 export function GalleryPageComponent() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [videos, setVideos] = useState<Video[]>([]);
   const [filteredVideos, setFilteredVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,7 +62,6 @@ export function GalleryPageComponent() {
       .then((res) => res.json()) // Parsing the JSON from the response
       .then((data) => {
         const dataObject = JSON.parse(data);
-        setVideos(dataObject);
         setFilteredVideos(dataObject);
         console.log(dataObject);
         setLoading(false);
@@ -100,7 +98,6 @@ export function GalleryPageComponent() {
       })
       .then((data) => {
         const dataObject = JSON.parse(data);
-        setVideos(dataObject);
         setFilteredVideos(dataObject);
         setLoading(false);
       })

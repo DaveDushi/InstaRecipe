@@ -89,7 +89,7 @@ export function LoginPageComponent() {
           <p className="text-sm text-gray-500 text-center">
             <strong>Disclaimer: </strong>This app is not affiliated with or
             endorsed by Instagram. Please ensure your use complies with
-            Instagram's terms of service.
+            Instagram&#39;s terms of service.
           </p>
         </CardFooter>
       </Card>
