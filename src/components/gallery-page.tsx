@@ -14,6 +14,7 @@ interface Video {
   shortcode: string;
   caption: string;
   post_url: string;
+  post_img: string;
   post_owner: string;
 }
 
@@ -30,7 +31,32 @@ export function GalleryPageComponent() {
   const [filteredVideos, setFilteredVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const handleSearch = () => {};
+  const handleSearch = async () => {
+    try {
+      // Perform the search request
+      const response = await fetch(
+        `api/search/hi?query=${encodeURIComponent(searchTerm)}`,
+        {
+          method: "GET",
+          credentials: "include", // This ensures cookies are sent with the request
+        }
+      );
+
+      // Check if the response is OK (status code 200-299)
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      // Parse the JSON response
+      const data = await response.json();
+
+      // Update the state with the search results
+      setFilteredVideos(data);
+    } catch (error) {
+      // Handle errors (e.g., display an error message)
+      console.error("Error fetching search results:", error);
+    }
+  };
 
   useEffect(() => {
     fetch("/api/posts/saved_posts")
@@ -39,6 +65,7 @@ export function GalleryPageComponent() {
         const dataObject = JSON.parse(data);
         setVideos(dataObject);
         setFilteredVideos(dataObject);
+        console.log(dataObject);
         setLoading(false);
       })
       .catch((error) => {
@@ -132,13 +159,15 @@ export function GalleryPageComponent() {
           ) : Array.isArray(filteredVideos) && filteredVideos.length > 0 ? (
             filteredVideos.map((video) => (
               <Link
-                href={`/post/${video.post_id.toString()}`}
+                href={`/post/${video.shortcode}`}
                 key={video.post_id}
                 className="block"
               >
                 <div className="aspect-square relative group">
                   <img
-                    src={video.post_url}
+                    src={`api/posts/proxy?url=${encodeURIComponent(
+                      video.post_img
+                    )}`}
                     alt={video.post_owner}
                     className="w-full h-full object-cover rounded-lg shadow-md transition-transform duration-200 ease-in-out group-hover:scale-105"
                   />

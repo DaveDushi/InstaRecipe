@@ -1,9 +1,10 @@
-from flask import Blueprint, jsonify, session as flask_session
+from flask import Blueprint, jsonify, session as flask_session, request, Response
 from services import InstagramManager
 from dotenv import load_dotenv
 import os
 import pymongo
 from bson.json_util import dumps
+import requests
 
 load_dotenv()
 
@@ -44,13 +45,30 @@ def update_saved_posts():
         return jsonify({"error": str(e)}), 400
     
 
-@posts_bp.route('/post/<int:id>', methods=['GET'])
+@posts_bp.route('/post/<string:id>', methods=['GET'])
 def find_post(id):
     # Your logic to find the post by id
-    post = recipe_collection.find_one({'post_id': id}, {'caption_embedding': 0})
+    post = recipe_collection.find_one({'shortcode': id}, {'caption_embedding': 0})
 
     if post:
         post_json = dumps(post)
         return jsonify(post_json), 200
     else:
         return jsonify({"error": "Post not found"}), 404
+
+@posts_bp.route('/proxy')
+def proxy_image():
+    # Get the image URL from the query parameter
+    image_url = request.args.get('url')
+    if not image_url:
+        return "Missing URL", 400
+
+    try:
+        # Fetch the image from the external URL
+        response = requests.get(image_url, stream=True)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        return f"Error fetching image: {e}", 500
+
+    # Return the image with correct content type
+    return Response(response.content, content_type=response.headers['Content-Type'])

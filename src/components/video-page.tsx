@@ -14,6 +14,7 @@ interface Video {
   shortcode: string;
   caption: string;
   post_url: string;
+  post_img: string;
   post_owner: string;
 }
 
@@ -68,7 +69,9 @@ export function VideoPageComponent({ id }: VideoPageProps) {
             <video
               controls
               className="absolute inset-0 w-full h-full object-contain"
-              poster="/placeholder.svg?height=640&width=360"
+              poster={`api/posts/proxy?url=${encodeURIComponent(
+                video.post_img
+              )}`}
             >
               <source src={video.post_url} type="video/mp4" />
               Your browser does not support the video tag.
@@ -87,7 +90,7 @@ export function VideoPageComponent({ id }: VideoPageProps) {
                   <Send className="h-6 w-6" />
                 </Button>
                 <Link
-                  href={`instagram.com/${video.shortcode}`}
+                  href={`https://instagram.com/p/${video.shortcode}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -102,10 +105,10 @@ export function VideoPageComponent({ id }: VideoPageProps) {
               </div>
             </div>
             <div>
-              <p className="font-bold mb-2">{video.username}</p>
-              <p>
-                <pre>{video.caption}</pre>
-              </p>
+              <p className="font-bold mb-2">{video.post_owner}</p>
+              <pre className="whitespace-pre-wrap break-words">
+                {video.caption}
+              </pre>
             </div>
           </div>
         </CardContent>

@@ -17,9 +17,12 @@ export function LoginPageComponent() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+
+    setLoading(true);
 
     const formData = new FormData();
     formData.append("username", username);
@@ -32,14 +35,17 @@ export function LoginPageComponent() {
     })
       .then((res) => {
         if (res.ok) {
+          setLoading(false);
           router.push("/");
           router.refresh();
         } else {
           console.log(res);
+          setLoading(false);
         }
       })
       .catch((e) => {
         console.error(e);
+        setLoading(false);
       });
     console.log("Login attempted with:", username, password);
   };
@@ -75,7 +81,7 @@ export function LoginPageComponent() {
               />
             </div>
             <Button type="submit" className="w-full">
-              Login
+              {loading ? "Logging in..." : "Login"}
             </Button>
           </form>
         </CardContent>

@@ -108,8 +108,10 @@ def add_posts_to_db(posts, username):
                 'shortcode': post.shortcode,
                 'caption': post.caption,
                 'post_url': post_link,
-                'caption_embedding': caption_embedding,
-                'post_owner': post.owner_username
+                'post_img': post.url,
+                'post_owner': post.owner_username,
+                'caption_embedding': caption_embedding
+                
             }
             recipe_collection.insert_one(post_data)
             new_posts_count += 1
