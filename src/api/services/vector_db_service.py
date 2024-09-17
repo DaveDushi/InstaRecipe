@@ -35,6 +35,7 @@ def search_posts(query_vector, username):
                     'caption': 1,
                     'post_url': 1,
                     'post_owner': 1,
+                    'post_img': 1,
                     "score": {
                         '$meta': 'vectorSearchScore'
                     }
