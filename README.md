@@ -1,7 +1,3 @@
-Got it! Here’s an updated README incorporating `instaloader`:
-
----
-
 # InstaRecipe
 
 InstaRecipe is a web application designed to help users search through and manage their saved Instagram recipes. Built with a modern tech stack, it provides an intuitive interface for discovering and organizing recipes using advanced search functionality.
@@ -11,8 +7,6 @@ InstaRecipe is a web application designed to help users search through and manag
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Setup](#setup)
-  - [Frontend](#frontend)
-  - [Backend](#backend)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
@@ -31,64 +25,29 @@ InstaRecipe is a web application designed to help users search through and manag
 - **Instagram Data**: [Instaloader](https://instaloader.github.io/) - A Python library for accessing and downloading Instagram data.
 
 ## Setup
-
-### Frontend
-
-1. Clone the repository:
+Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/instarecipe.git
-   cd instarecipe
+   git clone https://github.com/DaveDushi/InstaRecipe.git
+   cd InstaRecipe
    ```
-
-2. Navigate to the frontend directory and install dependencies:
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-3. Set up environment variables:
-   Create a `.env.local` file in the `frontend` directory with the following content:
-   ```env
-   NEXT_PUBLIC_API_URL=http://localhost:5000/api
-   ```
-
-4. Run the development server:
-   ```bash
-   npm run dev
-   ```
-
-### Backend
-
-1. Navigate to the backend directory and create a virtual environment:
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Set up environment variables:
-   Create a `.env` file in the `backend` directory with the necessary configuration, including Instagram login credentials and API keys.
-
-4. Install `instaloader`:
-   ```bash
-   pip install instaloader
-   ```
-
-5. Run the Flask application:
-   ```bash
-   flask run
-   ```
+## Running the Project
+To run the entire project with both frontend and backend, use the following command:
+  ```bash
+  npm run dev
+  ```
+  This command will:
+  
+  - Start the Flask server with debugging enabled.
+  - Start the Next.js development server.
+  - Install any missing dependencies if needed.
 
 ## Usage
 
 1. Open your browser and go to `http://localhost:3000` to access the frontend.
-2. Use the search bar to find and manage your saved Instagram recipes.
-3. Authenticate with your Instagram account to sync saved recipes with the app.
+2. Authenticate with your Instagram account
+3. click refresh to sync saved recipes with the app.
+4. Use the search bar to find and manage your saved Instagram recipes.
+
 
 ## Contributing
 
@@ -105,4 +64,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-Feel free to adjust as needed!
+Feel free to tweak or add any additional information!
