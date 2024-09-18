@@ -62,6 +62,3 @@ We welcome contributions to improve InstaRecipe! To contribute, please follow th
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
----
-
-Feel free to tweak or add any additional information!
