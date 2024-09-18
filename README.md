@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Got it! Here’s an updated README incorporating `instaloader`:
 
-## Getting Started
+---
 
-First, run the development server:
+# InstaRecipe
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+InstaRecipe is a web application designed to help users search through and manage their saved Instagram recipes. Built with a modern tech stack, it provides an intuitive interface for discovering and organizing recipes using advanced search functionality.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Table of Contents
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Setup](#setup)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features
 
-## Learn More
+- **Search Saved Recipes**: Find recipes saved on Instagram with powerful search capabilities.
+- **User Authentication**: Secure login and session management for a personalized experience.
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Frontend**: [Next.js](https://nextjs.org/) - A React framework for building server-rendered applications.
+- **Backend**: [Flask](https://flask.palletsprojects.com/) - A lightweight Python web framework for API development.
+- **Database**: [MongoDB](https://www.mongodb.com/) - NoSQL database for storing recipe data and user information.
+- **API**: [OpenAI](https://openai.com/) - Used for creating embeddings for semantic search.
+- **Instagram Data**: [Instaloader](https://instaloader.github.io/) - A Python library for accessing and downloading Instagram data.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Setup
 
-## Deploy on Vercel
+### Frontend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/instarecipe.git
+   cd instarecipe
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Navigate to the frontend directory and install dependencies:
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+3. Set up environment variables:
+   Create a `.env.local` file in the `frontend` directory with the following content:
+   ```env
+   NEXT_PUBLIC_API_URL=http://localhost:5000/api
+   ```
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+### Backend
+
+1. Navigate to the backend directory and create a virtual environment:
+   ```bash
+   cd backend
+   python -m venv venv
+   source venv/bin/activate
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Set up environment variables:
+   Create a `.env` file in the `backend` directory with the necessary configuration, including Instagram login credentials and API keys.
+
+4. Install `instaloader`:
+   ```bash
+   pip install instaloader
+   ```
+
+5. Run the Flask application:
+   ```bash
+   flask run
+   ```
+
+## Usage
+
+1. Open your browser and go to `http://localhost:3000` to access the frontend.
+2. Use the search bar to find and manage your saved Instagram recipes.
+3. Authenticate with your Instagram account to sync saved recipes with the app.
+
+## Contributing
+
+We welcome contributions to improve InstaRecipe! To contribute, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and ensure they are well-tested.
+4. Submit a pull request with a clear description of your changes.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+Feel free to adjust as needed!
